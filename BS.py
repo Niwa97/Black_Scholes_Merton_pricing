@@ -36,18 +36,18 @@ plt.axvline(final_prices.mean() + final_prices.std(), label = 'mean + std_dev', 
 plt.legend()
 plt.show()
 
-H_european = np.maximum(K - final_prices, 0)
-plt.hist(H_european, bins = 40)
+H_european_put = np.maximum(K - final_prices, 0)
+plt.hist(H_european_put, bins = 40)
 plt.show()
-payoff_european = dr*H_european.mean()
+payoff_european = dr*H_european_put.mean()
 print("European put: ", payoff_european)
 
-H_american = np.maximum(K - action_prices, 0)
-values = H_american[-1]
+H_american_put = np.maximum(K - action_prices, 0)
+values = H_american_put[-1]
 for n in range(max_steps-1, 0, -1):
   least_squares = Polynomial.fit(action_prices[n], dr*values, deg = 4)
   fitted_value = least_squares(action_prices[n])
-  values = np.where(H_american[n] > fitted_value, H_american[n], dr*values)
+  values = np.where(H_american_put[n] > fitted_value, H_american_put[n], dr*values)
 
-payoff_american = dr*H_american.mean()
+payoff_american = dr*H_american_put.mean()
 print("American put: ", payoff_american)
